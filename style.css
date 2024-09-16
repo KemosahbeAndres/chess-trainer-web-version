@@ -1,0 +1,20 @@
+html, body {
+    background-color: rgb(73, 73, 73);
+    color: white;
+}
+h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+}
+.nav, .nav-item, .nav-link {
+    background-color: transparent;
+}
+.disabled {
+    color: var(--bs-nav-link-color) !important;
+    text-decoration: line-through;
+}
+.nav-item {
+    padding: .4em 0;
+}
+.options {
+    font-size: 50pt;
+}
