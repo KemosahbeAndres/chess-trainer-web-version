@@ -19,7 +19,7 @@
       <div id="app" class="mt-4">
           <div class="mt-4 py-4">
               <h1 class="options">{{casillaA}}, {{casillaB}}</h1>
-              <h2 v-show="clicked && winner" class="text-success">Verdadero</h2>
+              <h2 v-show="clicked && winner" class="text-success">Correcto</h2>
               <h2 v-show="clicked && !winner" class="text-danger">Incorrecto</h2>
           </div>
           <div class="hstack gap-2 mt-2" v-show="!clicked">
@@ -71,15 +71,27 @@
                         return true;
                     }
                 },
-                sameDiagonal(){
-                    //4 direcciones
-                    let found = false;
-                    let i = this.coordenadaA[0];
-                    let j = this.coordenadaA[1];
-                    for(let c = 0; c < 8; c++){
-                        
+                diagonal(x=1, y=1){
+                    console.log("Verificando diagonal => ", this.coordenadaA[1]+x, this.coordenadaA[0]+y, this.toCasilla([this.coordenadaA[0]+y,this.coordenadaA[1]+x]))
+                    if(this.coordenadaA[0]+y >= 8 || this.coordenadaA[0]+y < 0 || this.coordenadaA[1]+x >= 8 || this.coordenadaA[1]+x < 0) {
+                        console.log("no encontrado...")
+                        return false
                     }
-                    return found;
+                    if((this.coordenadaA[0]+y) == this.coordenadaB[0] && (this.coordenadaA[1]+x) == this.coordenadaB[1]){
+                        console.log("encontrada en coordenada ",this.coordenadaB)
+                        return true
+                    }
+                    return this.diagonal(x+x, y+y)
+                },
+                sameDiagonal(){
+                    return (this.sameColor && 
+                        (
+                            this.diagonal(1,1) ||
+                            this.diagonal(1,-1) ||
+                            this.diagonal(-1,1) ||
+                            this.diagonal(-1,-1)
+                        )
+                    )
                 },
                 reset(){
                     this.clicked = false
@@ -103,7 +115,7 @@
             },
             computed: {
                 winner(){
-                    return (this.clicked && this.option && this.sameColor) || (this.clicked && !this.option && !this.sameColor);
+                    return (this.clicked && this.option && this.sameDiagonal()) || (this.clicked && !this.option && !this.sameDiagonal());
                 },
                 sameColor(){
                   return (this.iswhite(this.coordenadaA) && this.iswhite(this.coordenadaB)) || (!this.iswhite(this.coordenadaA) && !this.iswhite(this.coordenadaB))
@@ -120,7 +132,7 @@
             mounted(){
                 this.coordenadaA = this.dameCasilla()
                 this.coordenadaB = this.dameCasilla()
-                this.createBoard()
+                //this.createBoard()
             }
         })
 
